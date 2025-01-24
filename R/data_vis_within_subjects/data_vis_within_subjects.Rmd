@@ -2,7 +2,10 @@
 title: "Visualize Within-Subjects Condition Effects"
 author: "Martin Zettersten"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output:
+  html_document:
+    toc: true
+    code_folding: show
 ---
 
 ```{r setup, message=F, warning=F}

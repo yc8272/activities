@@ -1,0 +1,138 @@
+---
+title: "Nest and Map"
+format: 
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+editor: visual
+---
+
+The following tutorial will introduce you to a set of powerful functions in the tidyverse:
+
+-   `nest()`
+
+-   `map()`
+
+They are especially powerful when used in combination with each other
+
+## Load libraries and data
+
+For this exercise, we're going to use the Gapminder dataset
+
+```{r}
+#install.packages("gapminder")
+library(gapminder)
+library(tidyverse)
+library(broom)
+```
+
+Now, let's just take a quick peek at the gapminder dataset
+
+```{r}
+df <- gapminder
+df %>%
+  glimpse()
+```
+
+One thing we can notice is that gdp per capita has a long tail
+
+```{r}
+hist(df$gdpPercap)
+
+df %>%
+  ggplot(aes(gdpPercap))+
+  geom_histogram()
+```
+
+Let's log transform gdp per capita to make it more akin to a normal distribution
+
+```{r}
+df <- df %>%
+  mutate(log_gdp_pc = log(gdpPercap))
+```
+
+That's better
+
+```{r}
+hist(df$log_gdp_pc)
+```
+
+## Predicting life expectancy from gdp per capita
+
+Let's fit a linear model predicting life expectancy from GDP per capita
+
+```{r}
+df_77 <- df %>% 
+  filter(year == 1977)
+
+fit <- lm(lifeExp ~ log_gdp_pc, data = df_77)
+summary(fit)
+```
+
+You can use the broom package to get a "tidy" output and the `kable()` function in knitr to get a clean-looking table
+
+```{r}
+fit %>%
+  broom::tidy() %>%
+  knitr::kable()
+```
+
+Plot it!
+
+```{r}
+ggplot(df_77,aes(log_gdp_pc,lifeExp))+
+  geom_point()+
+  geom_smooth(method="lm")
+```
+
+## Using nest and map to look across many years
+
+### nest()
+
+```{r}
+nested <- gapminder %>%
+  group_by(year) %>%
+  nest()
+```
+
+### map()
+
+Define a function to fit a linear model
+
+```{r}
+fit_ols <- function(df) {
+  lm(lifeExp ~ log_gdp_pc, data = df)
+}
+```
+
+### Combine nest() and map()
+
+Use nest
+
+```{r}
+nested <- df %>%
+  group_by(year) %>%
+  nest() %>%
+  mutate(model=map(data,fit_ols))
+```
+
+```{r}
+nested <- df %>%
+  group_by(year) %>%
+  nest() %>%
+  mutate(model=map(data,fit_ols)) %>%
+  mutate(output = map(model,broom::tidy)) %>%
+  unnest(output)
+```
+
+### Plot
+
+Here's a nice companion plot to show what's going on in the data. Note that we're not using nesting here, we're just taking advantage of ggplot's `facet_wrap()` function
+
+```{r}
+ggplot(df,aes(log_gdp_pc,lifeExp))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  facet_wrap(~year)
+```
