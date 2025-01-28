@@ -38,8 +38,6 @@ df %>%
 One thing we can notice is that gdp per capita has a long tail
 
 ```{r}
-hist(df$gdpPercap)
-
 df %>%
   ggplot(aes(gdpPercap))+
   geom_histogram()
