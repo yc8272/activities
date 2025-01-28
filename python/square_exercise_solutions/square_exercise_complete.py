@@ -3,20 +3,15 @@ import sys
 from psychopy import visual,event,core # import the bits of PsychoPy we'll need for this exercise
 
 win = visual.Window([400,400],color="black", units='pix',checkTiming=False) #open a window
-square = visual.Rect(win,lineColor="black",fillColor="red",size=[100,100]) #create a Rectangle type object with certain parameters
+square = visual.Rect(win,lineColor="black",fillColor="blue",size=[100,100]) #create a Rectangle type object with certain parameters
 
-spinning = True
 while True:
-    if spinning:
-        square.ori += 6
-        square.draw()
-        win.flip()
-    if event.getKeys('s'):
-        spinning = False
-        square.draw()
-        win.flip()
-    if event.getKeys('r'):
-        spinning = True
+    if event.getKeys('left'):
+        square.size += [10,0]
+    elif event.getKeys('right'):
+        square.size += [-10,0]
+    square.draw()
+    win.flip()
     if event.getKeys('q'):
         break
 
