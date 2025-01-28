@@ -237,6 +237,19 @@ Try to make the plot shown in Figure \@ref(fig:visualization2-practice1). Here i
 
 ```{r}
 # write your code here
+ggplot(data = df.diamonds[1:10000, ],
+       mapping = aes(x = cut,
+                     y = price)) +
+  geom_violin() + 
+geom_point(position = position_jitter(width = 0.1,
+                                        height = 0.1),
+             alpha = 0.1) +
+  stat_summary(
+    fun = "mean",
+    geom = "point",
+    size = 4,
+    color = "blue"
+  )
 ```
 
 ```{r visualization2-practice1, echo=FALSE, fig.cap='Practice plot 1.'}
