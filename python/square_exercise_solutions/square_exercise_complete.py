@@ -10,8 +10,10 @@ while True:
     square.draw()
     win.flip()
     square.ori +=6 #assuming 60 Hz refresh rate, so 6*60 ~360 degrees per second
-    if event.getKeys('q'):
+    if event.getKeys('s'):
         break
+
+core.wait(2) # just wait for two seconds so you can see the stop effect
 
 win.close() #close the window -- don't need this if you're running this as a separate file
 core.quit() #quit out of the program -- don't need this if you're running this as a separate file
