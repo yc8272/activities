@@ -28,6 +28,10 @@ print(images_dictionary['1_0_R'])
 correct_feedback = visual.TextStim(win, text = "Correct!",color="white", height=30, pos = (0,0))
 incorrect_feedback = visual.TextStim(win, text = "Incorrect.",color="white", height=30, pos = (0,0))
 
+# add a fixation cross
+fixation_cross = visual.TextStim(win, text = "+",color="black", height=40, pos = (0,0))
+fixation_cross_duration = .3
+
 # add audio feedback
 correct_feedback_sound_path = os.path.join(os.getcwd(),"stimuli","sounds","bleep.wav")
 correct_feedback_sound = sound.Sound(correct_feedback_sound_path)
@@ -44,6 +48,16 @@ data_file = open(os.path.join(os.getcwd(),'data',runtime_vars['subj_code']+'_dat
 header = separator.join(["subj_code","seed", 'image_name','item','angle','match','correct_response','response','rt'])
 data_file.write(header+'\n')
 
+#show instructions
+instruction_text = "Welcome to the experiment!\n\nPress the space bar to continue."
+instruction = visual.TextStim(win, text = instruction_text,color="white", height=30, pos = (0,0))
+instruction.draw()
+win.flip()
+#wait for the space key
+event.waitKeys(keyList=['space'])
+win.flip()
+core.wait(.5)
+
 # trial loop
 responseTimer = core.Clock()
 for cur_trial in trial_list:
@@ -56,7 +70,14 @@ for cur_trial in trial_list:
     print(cur_image.size)
     cur_image.size = cur_image.size * 0.5
     #cur_image.size = [400,214]
-
+    
+    #draw fixation cross
+    fixation_cross.draw()
+    
+    #show
+    win.flip()
+    core.wait(fixation_cross_duration)
+    
     #draw image
     cur_image.draw()
     
@@ -79,12 +100,14 @@ for cur_trial in trial_list:
     if response == cur_correct_response:
         #correct
         correct_feedback.draw()
+        win.flip()
         correct_feedback_sound.play() 
         core.wait(0.3)
         correct_feedback_sound.stop() 
     else:
         #incorrect
         incorrect_feedback.draw()
+        win.flip()
         incorrect_feedback_sound.play()
         core.wait(0.3)
         incorrect_feedback_sound.stop() 
@@ -103,6 +126,8 @@ for cur_trial in trial_list:
     
     #trial-end wait seconds
     core.wait(0.5)
+    
+    win.flip()
 
 data_file.close()
 win.close() #close the window
