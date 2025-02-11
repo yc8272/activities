@@ -1,5 +1,6 @@
 import time
 import sys
+import os
 import random
 from psychopy import visual,event,core,gui
 
