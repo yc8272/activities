@@ -7,12 +7,12 @@ from gen_trials import generate_trials
 win = visual.Window([800,800],color="grey", units='pix', checkTiming=False,screen=1) 
 
 # get runtime variables
-order = ["subj_code","seed","gender"]
-runtime_vars = get_runtime_vars({'subj_code':'mr_101','seed': 10, 'gender':['Choose','male',"gender","nonbinary","other"]},order)
+order = ["subj_code","seed",'test_mode']
+runtime_vars = get_runtime_vars({'subj_code':'mr_101','seed': 10, 'test_mode':['Choose', 'practice','real']},order)
 print(runtime_vars)
 
 # generate trials
-generate_trials(runtime_vars["subj_code"],runtime_vars["seed"])
+generate_trials(runtime_vars["subj_code"],runtime_vars["seed"],runtime_vars['test_mode'])
 
 #positions
 positions = {"center": (0,0)}

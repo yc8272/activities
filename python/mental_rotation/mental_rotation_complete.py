@@ -8,12 +8,12 @@ from helper import get_runtime_vars, import_trials, load_files, get_keyboard_res
 win = visual.Window([800,800],color="grey", units='pix', checkTiming=False) 
 
 #get runtime variables
-order =  ['subj_code','seed','gender']
-runtime_vars= get_runtime_vars({'subj_code':'mr_101', 'seed':10, 'gender':['Choose', 'male','female', 'other']}, order)
+order =  ['subj_code','seed','test_mode']
+runtime_vars= get_runtime_vars({'subj_code':'mr_101', 'seed':10, 'test_mode':['Choose', 'practice','real']}, order)
 print(runtime_vars)
 
 # generate trials
-generate_trials(runtime_vars['subj_code'],runtime_vars['seed'])
+generate_trials(runtime_vars['subj_code'],runtime_vars['seed'],runtime_vars['test_mode'])
 
 #positions
 positions = {"center": (0,0)}
@@ -45,6 +45,7 @@ header = separator.join(["subj_code","seed", 'image_name','item','angle','match'
 data_file.write(header+'\n')
 
 # trial loop
+responseTimer = core.Clock()
 for cur_trial in trial_list:
 
     #define current image
@@ -64,7 +65,7 @@ for cur_trial in trial_list:
 
     #wait until the participant presses one of the keys from the key list
     event.clearEvents()
-    responseTimer = core.Clock()
+    responseTimer.reset()
     key_pressed = event.waitKeys(keyList=['z','m'],timeStamped=responseTimer)
     #once they press one of those keys, print it out and flip the window (why?)
     if key_pressed:
@@ -89,6 +90,7 @@ for cur_trial in trial_list:
         incorrect_feedback_sound.stop() 
     
     #writing a response
+    print([_ for _ in cur_trial])
     response_list=[cur_trial[_] for _ in cur_trial]
     print(response_list)
 	#write dep variables

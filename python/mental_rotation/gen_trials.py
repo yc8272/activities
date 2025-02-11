@@ -1,7 +1,7 @@
 import random
 import os
 
-def generate_trials(subj_code,seed):
+def generate_trials(subj_code,seed,test_mode):
 
     separator = ","
 
@@ -12,7 +12,7 @@ def generate_trials(subj_code,seed):
 
     # open a trial file
     trial_file = open(os.path.join(os.getcwd(),'trials',subj_code+'_trials.csv'),'w')
-    header = separator.join(["subj_code","seed", 'image_name','item','angle','match','correct_response'])
+    header = separator.join(["subj_code","seed","test_mode", 'image_name','item','angle','match','correct_response'])
     trial_file.write(header+'\n')
 
     #define key params
@@ -34,7 +34,7 @@ def generate_trials(subj_code,seed):
                     image_name = item+image_name_sep+angle + image_name_sep + "R"
                     correct_response = "m"
 
-                trials.append([subj_code,seed,image_name,item, angle, match, correct_response])
+                trials.append([subj_code,seed,test_mode,image_name,item, angle, match, correct_response])
     print(trials)
 
     #shuffle the list
